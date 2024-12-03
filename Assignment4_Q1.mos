@@ -1,0 +1,56 @@
+model 'Assignment4_Q1.mos'
+  options noimplicit
+  uses "mmxprs"
+  ! uses "mminsight" ! uncomment this line for an Xpress Insight model
+
+  declarations
+    n = 1..7
+    x: array(n, n) of mpvar  ! Binary variables to represent edges
+    c: array(n, n) of real   ! Distances between locations
+    Objective: linctr        ! Objective function
+  end-declarations
+  
+  ! Set large value for non-existent and self-referencing edges
+  forall(i in n, j in n) c(i, j) := 1000
+
+  ! Distances between connected nodes
+  c(1, 2) := 51     
+  c(1, 3) := 84     
+  c(1, 4) := 153
+  c(1, 5) := 116
+  c(2, 3) := 93
+  c(2, 5) := 122     
+  c(3, 4) := 55
+  c(3, 5) := 94     
+  c(3, 6) := 42
+  c(4, 5) := 84 
+  c(4, 6) := 47     
+  c(4, 7) := 65
+  c(5, 7) := 98     
+  
+
+  ! MST has exactly (n-1) edges
+  sum(i in n, j in n) x(i, j) = 6
+
+  ! Binary constraint for edge selection
+  forall(i in n, j in n) x(i, j) is_binary
+
+  ! Cycle elimination constraints 
+  x(3, 6) + x(4, 6) + x(3, 4) <= 2
+
+  ! Objective function: Minimize the total path length
+  Objective := sum(i in n, j in n) c(i, j) * x(i, j)
+  minimize(Objective)
+
+
+  writeln("Begin running model")
+  writeln("Total distance/cost of min. spanning tree is ", getobjval);
+  forall(j in n) do
+    forall(i in n) do
+	    if getsol(x(i,j)) = 1 then
+	      writeln('Edge x(', i, ', ', j, ') is on the minimum spanning tree')
+	    end-if
+    end-do
+  end-do
+  writeln("End running model")
+end-model

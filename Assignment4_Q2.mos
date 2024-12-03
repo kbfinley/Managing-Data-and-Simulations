@@ -1,0 +1,39 @@
+model 'Assignment4_Q2.mos'
+  options noimplicit
+  uses "mmxprs"
+  ! uses "mminsight" ! uncomment this line for an Xpress Insight model
+
+  declarations
+    t: array(1..4, 1..4) of real   ! Time framework
+    x: array(1..4, 1..4) of mpvar  ! Decision variables
+    Objective: linctr             ! Objective function
+  end-declarations
+
+  ! The time framework
+  t(1, 1) := 22; t(1, 2) := 18; t(1, 3) := 30; t(1, 4) := 18;
+  t(2, 1) := 18; t(2, 2) := 21; t(2, 3) := 27; t(2, 4) := 22;
+  t(3, 1) := 26; t(3, 2) := 20; t(3, 3) := 28; t(3, 4) := 28;
+  t(4, 1) := 16; t(4, 2) := 22; t(4, 3) := 25; t(4, 4) := 14;
+
+  ! Each job must be assigned to exactly one employee
+  forall(j in 1..4) sum(i in 1..4) x(i, j) = 1
+
+  ! Each employee can be assigned to at most one job
+  forall(i in 1..4) sum(j in 1..4) x(i, j) <= 1
+
+  ! Define binary decision variables
+  forall(i in 1..4, j in 1..4) x(i, j) is_binary
+  
+  ! Objective function: Minimize total time
+  Objective := sum(i in 1..4, j in 1..4) t(i, j) * x(i, j)
+  minimize(Objective)
+
+  writeln("Begin running model")
+  writeln("Total time to complete jobs is ", getobjval);
+  forall(i in 1..4, j in 1..4) do
+    if getsol(x(i, j)) = 1 then
+      writeln('Employee ', i, ' assigned to Job ', j)
+    end-if
+  end-do
+  writeln("End running model")
+end-model

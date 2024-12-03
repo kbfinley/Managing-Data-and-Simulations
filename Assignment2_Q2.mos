@@ -1,0 +1,35 @@
+model "Assignment2_Q2.mos"
+  options noimplicit
+  uses "mmxprs"
+  ! uses "mminsight" ! uncomment this line for an Xpress Insight model
+
+ declarations
+    a: mpvar
+    b: mpvar
+    c: mpvar
+    z: linctr ! objective function value
+    max_1: real
+    max_2: real
+    max_3: real
+  end-declarations
+
+  max_1:= 22
+  max_2:= 23
+  max_3:= 24
+
+  3*a + 4*b + 5*c <= max_1
+  2*a + 5*b + 7*c <= max_2
+  4*a + 3*b + 6*c <= max_3
+
+  z:= 7*a + 10*b + 14*c
+  maximize (z)
+
+  writeln("Begin running model")
+  writeln("Maximum: ", getobjval);
+  writeln('a', ": ", getsol(a))
+  writeln('b', ": ", getsol(b))
+  writeln('c', ": ", getsol(c))
+  writeln("End running model")
+
+end-model
+

@@ -1,0 +1,44 @@
+model 'Assignment4_Q3.mos'
+  options noimplicit
+  uses "mmxprs"
+  ! uses "mminsight" ! uncomment this line for an Xpress Insight model
+
+  declarations
+    p: real   ! Selling price per washer
+    v: real   ! Variable cost per washer
+    fc: real   ! Total fixed costs
+    units_sold: integer  ! Total units expected to sell
+    break_even_units: real   ! Break-even point in units
+    break_even_dollars: real  ! Break-even point in dollars
+    total_revenue: real  ! Total revenue from sales
+    total_costs: real  ! Total costs for producing and selling
+    total_profit: real  ! Total profit
+  end-declarations
+
+  ! Assign values
+  p := 0.25
+  v := 0.20
+  fc := 25000
+  units_sold := 2000000
+
+  ! Break-even point in units
+  break_even_units := fc / (p - v)
+
+  ! Break-even point in dollars
+  break_even_dollars := break_even_units * p
+
+  ! Total revenue
+  total_revenue := p * units_sold
+
+  ! Total costs
+  total_costs := fc + (v * units_sold)
+
+  ! Total profit
+  total_profit := total_revenue - total_costs
+
+  writeln("Begin running model")
+  writeln("(A) Calculate the break-even point in units for the neoprene knobs: $", break_even_units)
+  writeln("(B) Calculate the break-even point in dollars for the neoprene knobs: $", break_even_dollars)
+  writeln("(C) If the firm sells all 2,000,000 washers, what will the total profit be: $", total_profit)
+  writeln("End running model")
+end-model

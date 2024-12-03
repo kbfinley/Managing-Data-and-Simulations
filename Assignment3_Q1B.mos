@@ -1,0 +1,43 @@
+model "Assignment3_Q1B"
+  options noimplicit
+  uses "mmxprs"
+  ! uses "mminsight" ! uncomment this line for an Xpress Insight model
+
+  declarations
+    m: mpvar
+    s: mpvar
+    r: mpvar
+    n: mpvar   ! Decision variables for each genre
+    Profit:linctr
+  end-declarations
+
+    ! Constraints
+    ! Total demand constraint
+    m + s + r + n = 500000
+
+    ! Publisher availability constraints
+    m <= 170000
+    s <= 125000
+    r <= 150000
+    n <= 300000
+
+    ! Non-negativity constraints
+    m >= 0
+    s >= 0
+    r >= 0
+    n >= 0
+
+
+    ! Objective Function: Maximize profit
+    Profit := 9*m + 10*s + 11*r + 8*n
+
+    maximize(Profit)
+
+  writeln("Begin running model")
+   writeln("Total Profit: ", getobjval)
+    writeln("Mystery & Thriller: ", getsol(m))
+    writeln("Science Fiction & Fantasy: ", getsol(s))
+    writeln("Romance: ", getsol(r))
+    writeln("Non-fiction: ", getsol(n))
+  writeln("End running model")
+end-model

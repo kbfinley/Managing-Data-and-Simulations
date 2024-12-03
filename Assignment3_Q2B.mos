@@ -1,0 +1,43 @@
+model "Assignment3_Q2B"
+  options noimplicit
+  uses "mmxprs"
+  ! uses "mminsight" ! uncomment this line for an Xpress Insight model
+
+  declarations
+    n= 1..9
+    x: array(n) of mpvar
+    w: real
+    v: real
+    Cost: linctr
+  end-declarations
+
+  w:= 427
+  v:= 383
+
+  forall(i in 1..9) x(i) is_binary
+
+  ! Constraints:
+  ! Weight constraint (<= 427);
+  78*x(1) + 42*x(2) + 63*x(3) + 55*x(4) + 91*x(5) + 67*x(6) + 88*x(7) + 95*x(8) + 57*x(9) <= w;
+
+  ! Volume constraint (<= 383);
+  55*x(1) + 72*x(2) + 61*x(3) + 80*x(4) + 57*x(5) + 49*x(6) + 51*x(7) + 73*x(8) + 82*x(9) <= v;
+
+
+  ! Objective Function: Maximize total value;
+  Cost := 220*x(1) + 175*x(2) + 275*x(3) + 190*x(4) + 235*x(5) + 200*x(6) + 205*x(7) + 185*x(8) + 205*x(9);
+
+  maximize(Cost)
+
+  writeln("Begin running model")
+  writeln("Maximum return: ", getobjval);
+  forall(i in n) do
+	  if getsol(x(i)) = 1 then
+	    writeln('Pick prize x(',i,')')
+    else
+      writeln('DO NOT pick prize x(',i,')')
+	  end-if
+  end-do
+  writeln("End running model")
+
+end-model
